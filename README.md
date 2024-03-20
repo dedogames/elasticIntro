@@ -219,3 +219,136 @@ Inset multiple movies
     { "id": "1924", "title" : "Plan 9 from Outer Space", "year":1959 , "genre":["Horror", "Sci-Fi"] }
 
 ```
+
+
+Query Line Search(QLS)
+
+```json
+    find all movies with title star
+
+   [GET] 127.0.0.1:9200/movies/_search?q=title:star
+
+    Result:
+    {
+    "took": 5,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 2,
+            "relation": "eq"
+        },
+        "max_score": 1.0296195,
+        "hits": [
+            {
+                "_index": "movies",
+                "_type": "_doc",
+                "_id": "135569",
+                "_score": 1.0296195,
+                "_source": {
+                    "id": "135569",
+                    "title": "Star Trek Beyond",
+                    "year": 2016,
+                    "genre": [
+                        "Action",
+                        "Adventure",
+                        "Sci-Fi"
+                    ]
+                }
+            },
+            {
+                "_index": "movies",
+                "_type": "_doc",
+                "_id": "122886",
+                "_score": 0.73069775,
+                "_source": {
+                    "id": "122886",
+                    "title": "Star Wars: Episode VII - The Force Awakens",
+                    "year": 2015,
+                    "genre": [
+                        "Action",
+                        "Adventure",
+                        "Fantasy",
+                        "Sci-Fi",
+                        "IMAX"
+                    ]
+                }
+            }
+        ]
+    }
+}
+
+```
+
+
+
+```json
+    Other query
+    
+    127.0.0.1:9200/movies/_search?q=+year:>2015+title:star
+
+    Result:
+    {
+    "took": 5,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 2,
+            "relation": "eq"
+        },
+        "max_score": 2.0296195,
+        "hits": [
+            {
+                "_index": "movies",
+                "_type": "_doc",
+                "_id": "135569",
+                "_score": 2.0296195,
+                "_source": {
+                    "id": "135569",
+                    "title": "Star Trek Beyond",
+                    "year": 2016,
+                    "genre": [
+                        "Action",
+                        "Adventure",
+                        "Sci-Fi"
+                    ]
+                }
+            },
+            {
+                "_index": "movies",
+                "_type": "_doc",
+                "_id": "122886",
+                "_score": 0.73069775,
+                "_source": {
+                    "id": "122886",
+                    "title": "Star Wars: Episode VII - The Force Awakens",
+                    "year": 2015,
+                    "genre": [
+                        "Action",
+                        "Adventure",
+                        "Fantasy",
+                        "Sci-Fi",
+                        "IMAX"
+                    ]
+                }
+            }
+        ]
+    }
+}
+```
+
+> :warning: Can be **danger** using query with url, because:
+> * Security expose
+> * Onde especial caracter(+,-...) can break query
+>  * Hard to debug
