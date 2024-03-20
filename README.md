@@ -2,14 +2,14 @@
 Basic doc about how to create a simple Elastic with docker
 
 
-Run
+## Run
 ```bash 
 docker-compose up -d
 ```
 
 Elastic can be like a RESTful Api(GET, PUT, POST, DELETE)
 
-Check if its running
+## Check if its running
 ```bash
  curl -XGET 127.0.0.1:9200 
  ```
@@ -37,7 +37,7 @@ Check if its running
 
 
 
-Create index(like a table)
+## Create index(like a table)
 ```bash
     curl -XPUT 127.0.0.1:9200/movies 
 
@@ -74,7 +74,7 @@ example:
     }
 ```
 
-Database of movies
+## Database of movies
 
 Insert new movie
 ```json
@@ -221,7 +221,7 @@ Inset multiple movies
 ```
 
 
-Query Line Search(QLS)
+## Query Line Search(QLS)
 
 ```json
     find all movies with title star
@@ -352,3 +352,78 @@ Query Line Search(QLS)
 > * Security expose
 > * Onde especial caracter(+,-...) can break query
 >  * Hard to debug
+
+
+
+## Json Search
+
+While filters are essential for narrowing down search results, caching can significantly improve performance
+
+```json
+    127.0.0.1:9200/movies/_search
+
+    {
+        "query":{
+            "bool":{
+                "must": { "term": { "title": "trek"}},
+                "filter": { "range": { "year": {"gte": 2010}}},
+            }
+        }
+    }
+
+    Result:
+
+    {
+    "took": 15,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 1,
+            "relation": "eq"
+        },
+        "max_score": 1.540445,
+        "hits": [
+            {
+                "_index": "movies",
+                "_type": "_doc",
+                "_id": "135569",
+                "_score": 1.540445,
+                "_source": {
+                    "id": "135569",
+                    "title": "Star Trek Beyond",
+                    "year": 2016,
+                    "genre": [
+                        "Action",
+                        "Adventure",
+                        "Sci-Fi"
+                    ]
+                }
+            }
+        ]
+    }
+}
+```
+
+
+
+**Types of filters:**
+
+* term - query by exact value
+* terms - match any value of list
+* range - find date intervals(gt, gte, lt, lte)
+* exists - find in doc where field existis
+* missing - find in doc where field is missing
+* bool - conbine(must, must_not, should)
+
+**Type of queries**
+
+* match_all - return all documents
+* match - analyses result, like full text search
+* multi_match
+* bool - result ranked by relevance
