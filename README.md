@@ -427,3 +427,34 @@ While filters are essential for narrowing down search results, caching can signi
 * match - analyses result, like full text search
 * multi_match
 * bool - result ranked by relevance
+
+
+**Slop** - 
+```json
+ {"title": "quick brown fox"}
+
+ "query":{
+    "match_phrase":{
+        "title":{"query":"quick fox", "slop":1}
+    }
+ }
+Tolerance to return a valid result
+slop 1 - search by **quick brown fox**, will find one result
+```
+
+**Proximity queries**
+```json
+ {"title": "The terminal will display the response from Elasticsearch in a JSON format (made human-readable by the pretty parameter). The response will contain information about matching documents, including their scores and source data (depending on your index mapping)"}
+
+ "query":{
+    "match_phrase":{
+        "title":{"query":"terminal scores", "slop":100}
+    }
+ }
+
+ Return one result
+ 
+
+
+```
+**the closer the words to the query, the higher the score**
